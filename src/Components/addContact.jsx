@@ -1,53 +1,47 @@
-import { Component } from "react";
+import { useState } from "react";
 
-class AddContact extends Component {
-  state = {
-    name: "",
-    number: "",
-  };
+const AddContact = ({ infoCollect, contacts }) => {
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
 
-  collectingInput = (event) => {
-    event.preventDefault();
-    this.setState({
-      name: event.target.elements.name.value,
-      number: event.target.elements.number.value,
-    });
-    console.log(this.state);
-    event.target.elements.name.value = "";
-    event.target.elements.number.value = "";
-  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.name !== this.state.name ||
-      prevState.number !== this.state.number
-    ) {
-      this.props.infoCollect(this.state);
+    if (!name || !number) {
+      alert("Будь ласка, введіть ім'я та номер");
+      return;
     }
-  }
 
-  render() {
-    return (
-      <form onSubmit={this.collectingInput}>
-        <h2>Add new contact</h2>
-        <input
-          type="text"
-          name="name"
-          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-          required
-        />
-        <br />
-        <input
-          type="tel"
-          name="number"
-          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-          required
-        />
-        <br />
-        <button type="submit">Add contact</button>
-      </form>
-    );
-  }
-}
+
+    const newContact = {
+      id: `id-${contacts.length + 1}`,
+      name,
+      number,
+    };
+
+    infoCollect(newContact);
+
+    setName("");
+    setNumber("");
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Number"
+        value={number}
+        onChange={(e) => setNumber(e.target.value)}
+      />
+      <button type="submit">Add Contact</button>
+    </form>
+  );
+};
 
 export default AddContact;
